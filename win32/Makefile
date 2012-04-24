@@ -1077,8 +1077,8 @@ utils: $(PERLEXE) $(X2P)
 	copy ..\README.win32    ..\pod\perlwin32.pod
 	copy ..\pod\perldelta.pod ..\pod\perl51510delta.pod
 	cd ..
-	perl.exe -Ilib autodoc.pl
-	perl.exe -Ilib pod\perlmodlib.pl -q
+	miniperl.exe -Ilib autodoc.pl
+	miniperl.exe -Ilib pod\perlmodlib.pl -q
 	cd win32
 	$(PERLEXE) $(PL2BAT) $(UTILS)
 

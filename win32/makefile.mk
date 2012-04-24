@@ -1262,8 +1262,8 @@ utils: $(PERLEXE) $(X2P)
 	copy ..\README.vos      ..\pod\perlvos.pod
 	copy ..\README.win32    ..\pod\perlwin32.pod
 	copy ..\pod\perldelta.pod ..\pod\perl51510delta.pod
-	cd .. && perl.exe -Ilib autodoc.pl
-	cd .. && perl.exe pod\perlmodlib.pl -q
+	cd .. && miniperl.exe -Ilib autodoc.pl
+	cd .. && miniperl.exe pod\perlmodlib.pl -q
 	$(PERLEXE) $(PL2BAT) $(UTILS)
 
 ..\pod\perltoc.pod: $(PERLEXE) Extensions Extensions_nonxs
