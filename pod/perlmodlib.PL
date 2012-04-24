@@ -5,20 +5,19 @@ use warnings;
 
 $ENV{LC_ALL} = 'C';
 
-use FindBin;
-chdir $FindBin::Bin or die "$0: Can't chdir $FindBin::Bin: $!";
-
 my $Quiet = @ARGV && $ARGV[0] eq '-q';
 
-open (OUT, ">perlmodlib.pod") or die $!;
+open OUT, '>', 'pod/perlmodlib.pod'
+    or die "Can't open pod/perlmodlib.pod: $!";
 my (@pragma, @mod, @files);
 
 # MANIFEST itself is Unix style filenames, so we have to assume that Unix style
 # filenames will work.
 
-open (MANIFEST, "../MANIFEST") or die $!;
+open (MANIFEST, '<', 'MANIFEST') or die $!;
 @files = grep m#(?:\.pm|\.pod|_pm\.PL)#, map {s/\s.*//s; $_}
     grep { m#^(lib|ext|dist|cpan)/# && !m#/(?:t|demo)/# } <MANIFEST>;
+close MANIFEST or warn "$0: failed to close MANIFEST: $!";
 
 my %exceptions = (
     'abbrev' => 'Text::Abbrev',
@@ -32,8 +31,8 @@ my %exceptions = (
 );
 
 for my $filename (@files) {
-    unless (open MOD, '<', "../$filename") {
-	warn "Couldn't open ../$filename: $!";
+    unless (open MOD, '<', $filename) {
+	warn "Couldn't open $filename: $!";
 	next;
     }
 
@@ -1510,6 +1509,4 @@ you're redefining the world and willing to take the consequences.
 
 =cut
 
-close MANIFEST or warn "$0: failed to close MANIFEST (../MANIFEST): $!";
 close OUT      or warn "$0: failed to close OUT (perlmodlib.pod): $!";
-
