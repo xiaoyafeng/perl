@@ -305,12 +305,6 @@ _EOF_
     close $fh or die "Can't close $filename: $!";
 }
 
-if (@ARGV) {
-    my $workdir = shift;
-    chdir $workdir
-        or die "Couldn't chdir to '$workdir': $!";
-}
-
 open IN, "embed.fnc" or die $!;
 
 while (<IN>) {
