@@ -938,18 +938,20 @@ perl.pixie.config: config.sh
 	@echo "To build perl.pixie you must Configure -Doptimize=-g, checking..."
 	@$(MAKE) perl.config.dashg
 
-perl.pixie.atom: /usr/bin/atom perl
+!NO!SUBS!
+
+if test -x /usr/bin/atom; then
+    $spitshell >>$Makefile <<'!NO!SUBS!'
+perl.pixie: /usr/bin/atom /usr/bin/pixie perl.pixie.config perl
 	atom -tool pixie -L. -all -toolargs="-quiet" perl
-
-perl.pixie.irix: perl
-	pixie perl
-
+!NO!SUBS!
+else
+    $spitshell >>$Makefile <<'!NO!SUBS!'
 perl.pixie: /usr/bin/pixie perl.pixie.config perl
-	if test -x /usr/bin/atom; then \
-	  $(MAKE) perl.pixie.atom; \
-	else \
-	  $(MAKE) perl.pixie.irix; \
-	fi
+	pixie perl
+!NO!SUBS!
+fi
+$spitshell >>$Makefile <<'!NO!SUBS!'
 	@echo "Now you may run perl.pixie and then run pixie."
 
 # Gprof Perl
