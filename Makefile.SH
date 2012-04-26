@@ -895,35 +895,34 @@ quant$(PERL_EXE): $& perlmain$(OBJ_EXT) $(LIBPERL) $(static_ext) ext.libs $(PERL
 
 !NO!SUBS!
 
+perl_config_dashg="	@echo \"Checking optimize='-g' in config.sh...\"
+	@grep \"^optimize=\" config.sh
+	@egrep \"^optimize='(.*-g.*)'\" config.sh >/dev/null || exit 1"
+
 case "${osname}${osvers}" in
 linux*|darwin*)
-	$spitshell >>$Makefile <<'!NO!SUBS!'
+	$spitshell >>$Makefile <<!GROK!THIS!
 # Valgrind perl (currently Linux, Darwin only)
 
 perl.valgrind.config: config.sh
 	@echo "To build perl.valgrind you must Configure -Doptimize=-g -Uusemymalloc, checking..."
-	@$(MAKE) perl.config.dashg
+$perl_config_dashg
 	@echo "Checking usemymalloc='n' in config.sh..."
 	@grep "^usemymalloc="    config.sh
 	@grep "^usemymalloc='n'" config.sh >/dev/null || exit 1
 	@echo "And of course you have to have valgrind..."
-	$(VALGRIND) $(VG_TEST) || exit 1
-!NO!SUBS!
+	\$(VALGRIND) \$(VG_TEST) || exit 1
+!GROK!THIS!
 	;;
 esac	
 
-$spitshell >>$Makefile <<'!NO!SUBS!'
+$spitshell >>$Makefile <<!GROK!THIS!
 
 # Third Degree Perl (Tru64 only)
 
-perl.config.dashg:
-	@echo "Checking optimize='-g' in config.sh..."
-	@grep "^optimize=" config.sh
-	@egrep "^optimize='(.*-g.*)'" config.sh >/dev/null || exit 1
-
 perl.third.config: config.sh
 	@echo "To build perl.third you must Configure -Doptimize=-g -Uusemymalloc, checking..."
-	@$(MAKE) perl.config.dashg
+$perl_config_dashg
 	@echo "Checking usemymalloc='n' in config.sh..."
 	@grep "^usemymalloc="    config.sh
 	@grep "^usemymalloc='n'" config.sh >/dev/null || exit 1
@@ -936,9 +935,9 @@ perl.third: /usr/bin/atom perl.third.config perl
 
 perl.pixie.config: config.sh
 	@echo "To build perl.pixie you must Configure -Doptimize=-g, checking..."
-	@$(MAKE) perl.config.dashg
+$perl_config_dashg
 
-!NO!SUBS!
+!GROK!THIS!
 
 if test -x /usr/bin/atom; then
     $spitshell >>$Makefile <<'!NO!SUBS!'
