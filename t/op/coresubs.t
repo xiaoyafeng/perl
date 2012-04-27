@@ -17,7 +17,7 @@ my $bd = new B::Deparse '-p';
 
 my %unsupported = map +($_=>1), qw (
  __DATA__ __END__ AUTOLOAD BEGIN UNITCHECK CORE DESTROY END INIT CHECK and
-  cmp default delete do  dump  else  elsif  eq  eval  exists  for  foreach
+  cmp default do dump else elsif eq eval exists for foreach
   format ge given glob goto grep gt if last le local lt m map my  ne  next
   no or our package pos print printf prototype q qq qr qw qx redo  require
   return s say scalar sort split state study sub tr undef unless until use
@@ -50,11 +50,13 @@ while(<$kh>) {
 
       CORE::state $protochar = qr/([^\\]|\\(?:[^[]|\[[^]]+\]))/;
       my $numargs =
-            () = $proto =~ s/;.*//r =~ /\G$protochar/g;
+            $word eq 'delete' ? 1 :
+            (() = $proto =~ s/;.*//r =~ /\G$protochar/g);
+      my $suf = $word eq 'delete' ? '[0]' : '';
       my $code =
          "#line 1 This-line-makes-__FILE__-easier-to-test.
           sub { () = (my$word("
-             . ($args_for{$word} || join ",", map "\$$_", 1..$numargs)
+             . ($args_for{$word} || join ",", map "\$$_$suf", 1..$numargs)
        . "))}";
       my $core = $bd->coderef2text(eval $code =~ s/my/CORE::/r or die);
       my $my   = $bd->coderef2text(eval $code or die);
@@ -63,7 +65,7 @@ while(<$kh>) {
       $code =
          "#line 1 This-line-makes-__FILE__-easier-to-test.
           sub { () = (my$word "
-             . ($args_for{$word} || join ",", map "\$$_", 1..$numargs)
+             . ($args_for{$word} || join ",", map "\$$_$suf", 1..$numargs)
        . ")}";
       $core = $bd->coderef2text(eval $code =~ s/my/CORE::/r or die);
       $my   = $bd->coderef2text(eval $code or die);
@@ -98,7 +100,7 @@ while(<$kh>) {
              . (
                 $args_for{$word}
                  ? $args_for{$word}.',$7'
-                 : join ",", map "\$$_", 1..$numargs+5+(
+                 : join ",", map "\$$_$suf", 1..$numargs+5+(
                       $proto =~ /;/
                        ? () = $' =~ /\G$protochar/g
                        : 0
