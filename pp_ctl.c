@@ -4268,8 +4268,9 @@ PP(pp_entergiven)
     SAVETMPS;
 
     if (PL_op->op_targ) {
-	SAVECLEARSV(PAD_SVl(PL_op->op_targ));
-	sv_setsv_mg(PAD_SV(PL_op->op_targ), POPs);
+	SAVEPADSVANDMORTALIZE(PL_op->op_targ);
+	SvREFCNT_dec(PAD_SVl(PL_op->op_targ));
+	PAD_SVl(PL_op->op_targ) = SvREFCNT_inc_NN(POPs);
     }
     else {
 	SAVE_DEFSV;
