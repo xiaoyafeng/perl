@@ -127,8 +127,8 @@ struct xpvhv {
 #endif
 
 #define PERL_HASH_SEED_U32   *((U32*)PERL_HASH_SEED)
-#define PERL_HASH_SEED_U64_1 (((U64*)PERL_HASH_SEED)[0])
-#define PERL_HASH_SEED_U64_2 (((U64*)PERL_HASH_SEED)[1])
+#define PERL_HASH_SEED_U64_1 (((U64TYPE*)PERL_HASH_SEED)[0])
+#define PERL_HASH_SEED_U64_2 (((U64TYPE*)PERL_HASH_SEED)[1])
 
 /* legacy - only mod_perl should be doing this.  */
 #ifdef PERL_HASH_INTERNAL_ACCESS
@@ -168,11 +168,13 @@ struct xpvhv {
 
 #define PERL_HASH_NEEDS_TWO_SEEDS
 
-#ifndef U64
-#define U64 uint64_t
+#ifndef U64TYPE
+/* This probably isn't going to work, but failing with a compiler error due to
+   lack of uint64_t is no worse than failing right now with an #error.  */
+#define U64TYPE uint64_t
 #endif
 
-#define ROTL(x,b) (U64)( ((x) << (b)) | ( (x) >> (64 - (b))) )
+#define ROTL(x,b) (U64TYPE)( ((x) << (b)) | ( (x) >> (64 - (b))) )
 
 #define U32TO8_LE(p, v)         \
     (p)[0] = (U8)((v)      ); (p)[1] = (U8)((v) >>  8); \
@@ -183,14 +185,14 @@ struct xpvhv {
   U32TO8_LE((p) + 4, (U32)((v) >> 32));
 
 #define U8TO64_LE(p) \
-  (((U64)((p)[0])      ) | \
-   ((U64)((p)[1]) <<  8) | \
-   ((U64)((p)[2]) << 16) | \
-   ((U64)((p)[3]) << 24) | \
-   ((U64)((p)[4]) << 32) | \
-   ((U64)((p)[5]) << 40) | \
-   ((U64)((p)[6]) << 48) | \
-   ((U64)((p)[7]) << 56))
+  (((U64TYPE)((p)[0])      ) | \
+   ((U64TYPE)((p)[1]) <<  8) | \
+   ((U64TYPE)((p)[2]) << 16) | \
+   ((U64TYPE)((p)[3]) << 24) | \
+   ((U64TYPE)((p)[4]) << 32) | \
+   ((U64TYPE)((p)[5]) << 40) | \
+   ((U64TYPE)((p)[6]) << 48) | \
+   ((U64TYPE)((p)[7]) << 56))
 
 #define SIPROUND            \
   do {              \
@@ -206,19 +208,19 @@ struct xpvhv {
   const unsigned char *in_PeRlHaSh = (const unsigned char *)strtmp_PeRlHaSh; \
   const U32 inlen_PeRlHaSh = (len); \
   /* "somepseudorandomlygeneratedbytes" */ \
-  U64 v0_PeRlHaSh = 0x736f6d6570736575ULL; \
-  U64 v1_PeRlHaSh = 0x646f72616e646f6dULL; \
-  U64 v2_PeRlHaSh = 0x6c7967656e657261ULL; \
-  U64 v3_PeRlHaSh = 0x7465646279746573ULL; \
+  U64TYPE v0_PeRlHaSh = 0x736f6d6570736575ULL; \
+  U64TYPE v1_PeRlHaSh = 0x646f72616e646f6dULL; \
+  U64TYPE v2_PeRlHaSh = 0x6c7967656e657261ULL; \
+  U64TYPE v3_PeRlHaSh = 0x7465646279746573ULL; \
 \
-  U64 b_PeRlHaSh;                           \
-  U64 k0_PeRlHaSh = PERL_HASH_SEED_U64_1;   \
-  U64 k1_PeRlHaSh = PERL_HASH_SEED_U64_2;   \
-  U64 m_PeRlHaSh;                           \
+  U64TYPE b_PeRlHaSh;                           \
+  U64TYPE k0_PeRlHaSh = PERL_HASH_SEED_U64_1;   \
+  U64TYPE k1_PeRlHaSh = PERL_HASH_SEED_U64_2;   \
+  U64TYPE m_PeRlHaSh;                           \
   const int left_PeRlHaSh = inlen_PeRlHaSh & 7; \
   const U8 *end_PeRlHaSh = in_PeRlHaSh + inlen_PeRlHaSh - left_PeRlHaSh; \
 \
-  b_PeRlHaSh = ( ( U64 )(len) ) << 56; \
+  b_PeRlHaSh = ( ( U64TYPE )(len) ) << 56; \
   v3_PeRlHaSh ^= k1_PeRlHaSh; \
   v2_PeRlHaSh ^= k0_PeRlHaSh; \
   v1_PeRlHaSh ^= k1_PeRlHaSh; \
@@ -235,13 +237,13 @@ struct xpvhv {
 \
   switch( left_PeRlHaSh ) \
   { \
-  case 7: b_PeRlHaSh |= ( ( U64 )in_PeRlHaSh[ 6] )  << 48; \
-  case 6: b_PeRlHaSh |= ( ( U64 )in_PeRlHaSh[ 5] )  << 40; \
-  case 5: b_PeRlHaSh |= ( ( U64 )in_PeRlHaSh[ 4] )  << 32; \
-  case 4: b_PeRlHaSh |= ( ( U64 )in_PeRlHaSh[ 3] )  << 24; \
-  case 3: b_PeRlHaSh |= ( ( U64 )in_PeRlHaSh[ 2] )  << 16; \
-  case 2: b_PeRlHaSh |= ( ( U64 )in_PeRlHaSh[ 1] )  <<  8; \
-  case 1: b_PeRlHaSh |= ( ( U64 )in_PeRlHaSh[ 0] ); break; \
+  case 7: b_PeRlHaSh |= ( ( U64TYPE )in_PeRlHaSh[ 6] )  << 48; \
+  case 6: b_PeRlHaSh |= ( ( U64TYPE )in_PeRlHaSh[ 5] )  << 40; \
+  case 5: b_PeRlHaSh |= ( ( U64TYPE )in_PeRlHaSh[ 4] )  << 32; \
+  case 4: b_PeRlHaSh |= ( ( U64TYPE )in_PeRlHaSh[ 3] )  << 24; \
+  case 3: b_PeRlHaSh |= ( ( U64TYPE )in_PeRlHaSh[ 2] )  << 16; \
+  case 2: b_PeRlHaSh |= ( ( U64TYPE )in_PeRlHaSh[ 1] )  <<  8; \
+  case 1: b_PeRlHaSh |= ( ( U64TYPE )in_PeRlHaSh[ 0] ); break; \
   case 0: break; \
   } \
 \
