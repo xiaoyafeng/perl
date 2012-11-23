@@ -145,7 +145,7 @@ struct xpvhv {
 */
 
 #if !(defined(PERL_HASH_FUNC_SDBM) || defined(PERL_HASH_FUNC_DJB2) || defined(PERL_HASH_FUNC_SUPERFAST) || defined(PERL_HASH_FUNC_MURMUR3) || defined(PERL_HASH_FUNC_ONE_AT_A_TIME))
-#define PERL_HASH_FUNC_MURMUR3
+#define PERL_HASH_FUNC_SDBM
 #endif
 
 #if defined(PERL_HASH_FUNC_SIPHASH)
