@@ -276,7 +276,7 @@ struct xpvhv {
 #endif
 
 #if !defined (get16bits)
-#define get16bits(d) ((((const U8 *)(d))[1] << UINT32_C(8))\
+#define get16bits(d) ((((const U8 *)(d))[1] << 8)\
                       +((const U8 *)(d))[0])
 #endif
 #define PERL_HASH(hash,str,len) \
