@@ -3115,13 +3115,19 @@ dist/Data-Dumper/Dumper.xs	Data pretty printer, externals
 dist/Data-Dumper/t/bless.t	See if Data::Dumper works
 dist/Data-Dumper/t/bugs.t	See if Data::Dumper works
 dist/Data-Dumper/t/dumper.t	See if Data::Dumper works
+dist/Data-Dumper/t/dumpperl.t	See if $Data::Dumper::Dumpperl works
 dist/Data-Dumper/t/freezer.t	See if $Data::Dumper::Freezer works
+dist/Data-Dumper/t/indent.t	See if $Data::Dumper::Indent works
+dist/Data-Dumper/t/lib/Testing.pm	Routines for testing Data-Dumper
+dist/Data-Dumper/t/misc.t	Tests for various Data-Dumper methods
+dist/Data-Dumper/t/names.t	See if $Data::Dumper::Names works
 dist/Data-Dumper/Todo		Data pretty printer, futures
 dist/Data-Dumper/t/overload.t	See if Data::Dumper works for overloaded data
 dist/Data-Dumper/t/pair.t	See if Data::Dumper pair separator works
 dist/Data-Dumper/t/perl-74170.t	Regression test for stack reallocation
 dist/Data-Dumper/t/qr.t		See if Data::Dumper works with qr|/|
 dist/Data-Dumper/t/terse.t	See if Data::Dumper terse option works
+dist/Data-Dumper/t/values.t	See if $Data::Dumper::Values works
 dist/Devel-SelfStubber/lib/Devel/SelfStubber.pm	Generate stubs for SelfLoader.pm
 dist/Devel-SelfStubber/t/Devel-SelfStubber.t	See if Devel::SelfStubber works
 dist/Dumpvalue/lib/Dumpvalue.pm	Screen dump of perl values
