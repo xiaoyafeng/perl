@@ -1054,6 +1054,13 @@ use File::Glob qw(:case);
         'UPSTREAM'     => 'cpan',
     },
 
+    'IO::Socket::IP' => {
+        'MAINTAINER'   => 'pevans',
+        'DISTRIBUTION' => 'PEVANS/IO-Socket-IP-0.18.tar.gz',
+        'FILES'        => q[cpan/IO-Socket-IP],
+        'UPSTREAM'     => 'cpan',
+    },
+
     'IPC::Open3' => {
         'MAINTAINER' => 'p5p',
         'FILES'      => q[ext/IPC-Open3],

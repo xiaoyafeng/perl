@@ -17,14 +17,14 @@ our(@ISA, $VERSION, @EXPORT_OK);
 use Exporter;
 use Errno;
 
+$VERSION = "1.35";
+
 # legacy
 
 require IO::Socket::INET;
 require IO::Socket::UNIX if ($^O ne 'epoc' && $^O ne 'symbian');
 
 @ISA = qw(IO::Handle);
-
-$VERSION = "1.35";
 
 @EXPORT_OK = qw(sockatmark);
 

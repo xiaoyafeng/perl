@@ -79,6 +79,8 @@ my %skip;
     'lib/Config.pm',		# no version number but contents will vary
     'lib/Exporter/Heavy.pm',
     'win32/FindExt.pm',
+    'dist/IO/lib/IO/Socket.pm',         # testing branch for https://rt.perl.org/rt3//Public/Bug/Display.html?id=116433
+    'dist/IO/lib/IO/Socket/INET.pm',    # ^ ... ^
 } = ();
 
 # Files to skip just for particular version(s),
