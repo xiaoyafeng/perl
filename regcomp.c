@@ -4251,8 +4251,8 @@ PerlIO_printf(Perl_debug_log, "LHS=%d RHS=%d\n", -counted * deltanext + (minnext
 			if (!(data->start_class->flags & ANYOF_LOCALE)) {
 			    ANYOF_CLASS_CLEAR(data->start_class, classnum_to_namedclass(classnum) + 1);
                             for (value = 0; value < loop_max; value++) {
-                                if (! _generic_isCC(UNI_TO_NATIVE(value), classnum)) {
-                                    ANYOF_BITMAP_CLEAR(data->start_class, UNI_TO_NATIVE(value));
+                                if (! _generic_isCC(LATIN1_TO_NATIVE(value), classnum)) {
+                                    ANYOF_BITMAP_CLEAR(data->start_class, LATIN1_TO_NATIVE(value));
                                 }
                             }
 			}
@@ -4267,8 +4267,8 @@ PerlIO_printf(Perl_debug_log, "LHS=%d RHS=%d\n", -counted * deltanext + (minnext
 			 * in case it isn't a true locale-node.  This will
 			 * create false positives if it truly is locale */
                         for (value = 0; value < loop_max; value++) {
-                            if (_generic_isCC(UNI_TO_NATIVE(value), classnum)) {
-                                ANYOF_BITMAP_SET(data->start_class, UNI_TO_NATIVE(value));
+                            if (_generic_isCC(LATIN1_TO_NATIVE(value), classnum)) {
+                                ANYOF_BITMAP_SET(data->start_class, LATIN1_TO_NATIVE(value));
                             }
                         }
                         }
@@ -4285,8 +4285,8 @@ PerlIO_printf(Perl_debug_log, "LHS=%d RHS=%d\n", -counted * deltanext + (minnext
 			if (!(data->start_class->flags & ANYOF_LOCALE)) {
 			    ANYOF_CLASS_CLEAR(data->start_class, classnum_to_namedclass(classnum));
                             for (value = 0; value < loop_max; value++) {
-                                if (_generic_isCC(UNI_TO_NATIVE(value), classnum)) {
-                                    ANYOF_BITMAP_CLEAR(data->start_class, UNI_TO_NATIVE(value));
+                                if (_generic_isCC(LATIN1_TO_NATIVE(value), classnum)) {
+                                    ANYOF_BITMAP_CLEAR(data->start_class, LATIN1_TO_NATIVE(value));
                                 }
                             }
 			}
@@ -4301,8 +4301,8 @@ PerlIO_printf(Perl_debug_log, "LHS=%d RHS=%d\n", -counted * deltanext + (minnext
 			 * case it isn't a true locale-node.  This will create
 			 * false positives if it truly is locale */
                         for (value = 0; value < loop_max; value++) {
-                            if (! _generic_isCC(UNI_TO_NATIVE(value), classnum)) {
-                                ANYOF_BITMAP_SET(data->start_class, UNI_TO_NATIVE(value));
+                            if (! _generic_isCC(LATIN1_TO_NATIVE(value), classnum)) {
+                                ANYOF_BITMAP_SET(data->start_class, LATIN1_TO_NATIVE(value));
                             }
                         }
                         if (PL_regkind[OP(scan)] == NPOSIXD) {
