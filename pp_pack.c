@@ -733,13 +733,7 @@ S_bytes_to_uni(const U8 *start, STRLEN len, char *dest) {
     PERL_ARGS_ASSERT_BYTES_TO_UNI;
 
     while (start < end) {
-	const UV uv = NATIVE_TO_ASCII(*start);
-	if (UNI_IS_INVARIANT(uv))
-	    *dest++ = (char)(U8)UTF_TO_NATIVE(uv);
-	else {
-	    *dest++ = (char)(U8)UTF8_EIGHT_BIT_HI(uv);
-	    *dest++ = (char)(U8)UTF8_EIGHT_BIT_LO(uv);
-	}
+        append_utf8_from_native_byte(*start, (U8 **) & dest);
 	start++;
     }
     return dest;
