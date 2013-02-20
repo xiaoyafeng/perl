@@ -895,6 +895,8 @@ ApPR	|long	|my_ntohl	|long l
 #endif
 : Used in pp_ctl.c
 p	|void	|my_unexec
+ADMnoPR	|UV	|NATIVE_TO_NEED	|const UV enc|const UV ch
+ADMnoPR	|UV	|ASCII_TO_NEED	|const UV enc|const UV ch
 Apa	|OP*	|newANONLIST	|NULLOK OP* o
 Apa	|OP*	|newANONHASH	|NULLOK OP* o
 Ap	|OP*	|newANONSUB	|I32 floor|NULLOK OP* proto|NULLOK OP* block
