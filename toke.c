@@ -2110,7 +2110,7 @@ S_newSV_maybe_utf8(pTHX_ const char *const start, STRLEN len)
  */
 
 STATIC char *
-S_force_word(pTHX_ char *start, int token, int check_keyword, int allow_pack, int allow_initial_tick)
+S_force_word(pTHX_ char *start, int token, int check_keyword, int allow_pack)
 {
     dVAR;
     char *s;
@@ -2121,8 +2121,7 @@ S_force_word(pTHX_ char *start, int token, int check_keyword, int allow_pack, in
     start = SKIPSPACE1(start);
     s = start;
     if (isIDFIRST_lazy_if(s,UTF) ||
-	(allow_pack && *s == ':') ||
-	(allow_initial_tick && *s == '\'') )
+	(allow_pack && *s == ':') )
     {
 	s = scan_word(s, PL_tokenbuf, sizeof PL_tokenbuf, allow_pack, &len);
 	if (check_keyword && keyword(PL_tokenbuf, len, 0))
@@ -4531,12 +4530,12 @@ S_tokenize_use(pTHX_ int is_use, char *s) {
 	    force_next(WORD);
 	}
 	else if (*s == 'v') {
-	    s = force_word(s,WORD,FALSE,TRUE,FALSE);
+	    s = force_word(s,WORD,FALSE,TRUE);
 	    s = force_version(s, FALSE);
 	}
     }
     else {
-	s = force_word(s,WORD,FALSE,TRUE,FALSE);
+	s = force_word(s,WORD,FALSE,TRUE);
 	s = force_version(s, FALSE);
     }
     pl_yylval.ival = is_use;
@@ -5525,7 +5524,7 @@ Perl_yylex(pTHX)
 		s++;
 
 	    if (strnEQ(s,"=>",2)) {
-		s = force_word(PL_bufptr,WORD,FALSE,FALSE,FALSE);
+		s = force_word(PL_bufptr,WORD,FALSE,FALSE);
 		DEBUG_T( { printbuf("### Saw unary minus before =>, forcing word %s\n", s); } );
 		OPERATOR('-');		/* unary minus */
 	    }
@@ -5597,7 +5596,7 @@ Perl_yylex(pTHX)
 		s++;
 		s = SKIPSPACE1(s);
 		if (isIDFIRST_lazy_if(s,UTF)) {
-		    s = force_word(s,METHOD,FALSE,TRUE,FALSE);
+		    s = force_word(s,METHOD,FALSE,TRUE);
 		    TOKEN(ARROW);
 		}
 		else if (*s == '$')
@@ -5957,7 +5956,7 @@ Perl_yylex(pTHX)
 		    d++;
 		if (*d == '}') {
 		    const char minus = (PL_tokenbuf[0] == '-');
-		    s = force_word(s + minus, WORD, FALSE, TRUE, FALSE);
+		    s = force_word(s + minus, WORD, FALSE, TRUE);
 		    if (minus)
 			force_next('-');
 		}
@@ -7711,7 +7710,7 @@ Perl_yylex(pTHX)
 
 	case KEY_dump:
 	    PL_expect = XOPERATOR;
-	    s = force_word(s,WORD,TRUE,FALSE,FALSE);
+	    s = force_word(s,WORD,TRUE,FALSE);
 	    LOOPX(OP_DUMP);
 
 	case KEY_else:
@@ -7844,7 +7843,7 @@ Perl_yylex(pTHX)
 
 	case KEY_goto:
 	    PL_expect = XOPERATOR;
-	    s = force_word(s,WORD,TRUE,FALSE,FALSE);
+	    s = force_word(s,WORD,TRUE,FALSE);
 	    LOOPX(OP_GOTO);
 
 	case KEY_gmtime:
@@ -7967,7 +7966,7 @@ Perl_yylex(pTHX)
 
 	case KEY_last:
 	    PL_expect = XOPERATOR;
-	    s = force_word(s,WORD,TRUE,FALSE,FALSE);
+	    s = force_word(s,WORD,TRUE,FALSE);
 	    LOOPX(OP_LAST);
 	
 	case KEY_lc:
@@ -8075,7 +8074,7 @@ Perl_yylex(pTHX)
 
 	case KEY_next:
 	    PL_expect = XOPERATOR;
-	    s = force_word(s,WORD,TRUE,FALSE,FALSE);
+	    s = force_word(s,WORD,TRUE,FALSE);
 	    LOOPX(OP_NEXT);
 
 	case KEY_ne:
@@ -8165,7 +8164,7 @@ Perl_yylex(pTHX)
 	    LOP(OP_PACK,XTERM);
 
 	case KEY_package:
-	    s = force_word(s,WORD,FALSE,TRUE,FALSE);
+	    s = force_word(s,WORD,FALSE,TRUE);
 	    s = SKIPSPACE1(s);
 	    s = force_strict_version(s);
 	    PL_lex_expect = XBLOCK;
@@ -8268,7 +8267,7 @@ Perl_yylex(pTHX)
 		    || (s = force_version(s, TRUE), *s == 'v'))
 	    {
 		*PL_tokenbuf = '\0';
-		s = force_word(s,WORD,TRUE,TRUE,FALSE);
+		s = force_word(s,WORD,TRUE,TRUE);
 		if (isIDFIRST_lazy_if(PL_tokenbuf,UTF))
 		    gv_stashpvn(PL_tokenbuf, strlen(PL_tokenbuf),
                                 GV_ADD | (UTF ? SVf_UTF8 : 0));
@@ -8293,7 +8292,7 @@ Perl_yylex(pTHX)
 
 	case KEY_redo:
 	    PL_expect = XOPERATOR;
-	    s = force_word(s,WORD,TRUE,FALSE,FALSE);
+	    s = force_word(s,WORD,TRUE,FALSE);
 	    LOOPX(OP_REDO);
 
 	case KEY_rename:
@@ -8434,7 +8433,7 @@ Perl_yylex(pTHX)
 	    checkcomma(s,PL_tokenbuf,"subroutine name");
 	    s = SKIPSPACE1(s);
 	    PL_expect = XTERM;
-	    s = force_word(s,WORD,TRUE,TRUE,FALSE);
+	    s = force_word(s,WORD,TRUE,TRUE);
 	    LOP(OP_SORT,XREF);
 
 	case KEY_split:
@@ -8551,8 +8550,7 @@ Perl_yylex(pTHX)
 		    s = d;
 #else
 		    if (have_name)
-			(void) force_word(tmpbuf, WORD,
-					  FALSE, TRUE, FALSE);
+			(void) force_word(tmpbuf, WORD, FALSE, TRUE);
 #endif
 		    PREBLOCK(FORMAT);
 		}
