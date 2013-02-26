@@ -709,7 +709,7 @@ Perl_uvuni_to_utf8(pTHX_ U8 *d, UV uv)
 {
     PERL_ARGS_ASSERT_UVUNI_TO_UTF8;
 
-    return Perl_uvuni_to_utf8_flags(aTHX_ d, uv, 0);
+    return Perl_uvoffuni_to_utf8_flags(aTHX_ d, uv, 0);
 }
 
 bool
@@ -1225,6 +1225,22 @@ ASCII_TO_NEED(const UV enc, const UV ch)
     return ch;
 }
 
+/* XXX Add documentation for these */
+U8 *
+Perl_uvuni_to_utf8_flags(pTHX_ U8 *d, UV uv, UV flags)
+{
+    PERL_ARGS_ASSERT_UVUNI_TO_UTF8_FLAGS;
+
+    return uvoffuni_to_utf8_flags(d, uv, flags);
+}
+
+UV
+Perl_utf8n_to_uvuni(pTHX_ const U8 *s, STRLEN curlen, STRLEN *retlen, U32 flags)
+{
+    PERL_ARGS_ASSERT_UTF8N_TO_UVUNI;
+
+    return utf8n_to_uvoffuni(s, curlen, retlen, flags);
+}
 
 END_EXTERN_C
 

@@ -4732,7 +4732,13 @@ PERL_CALLCONV UV	Perl_utf8_to_uvuni_buf(pTHX_ const U8 *s, const U8 *send, STRLE
 #define PERL_ARGS_ASSERT_UTF8_TO_UVUNI_BUF	\
 	assert(s); assert(send)
 
+PERL_CALLCONV UV	Perl_utf8n_to_uvoffuni(pTHX_ const U8 *s, STRLEN curlen, STRLEN *retlen, U32 flags)
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_UTF8N_TO_UVOFFUNI	\
+	assert(s)
+
 PERL_CALLCONV UV	Perl_utf8n_to_uvuni(pTHX_ const U8 *s, STRLEN curlen, STRLEN *retlen, U32 flags)
+			__attribute__deprecated__
 			__attribute__nonnull__(pTHX_1);
 #define PERL_ARGS_ASSERT_UTF8N_TO_UVUNI	\
 	assert(s)
@@ -4742,6 +4748,11 @@ PERL_CALLCONV U8*	Perl_uvchr_to_utf8_flags(pTHX_ U8 *d, UV uv, UV flags)
 #define PERL_ARGS_ASSERT_UVCHR_TO_UTF8_FLAGS	\
 	assert(d)
 
+PERL_CALLCONV U8*	Perl_uvoffuni_to_utf8_flags(pTHX_ U8 *d, UV uv, UV flags)
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_UVOFFUNI_TO_UTF8_FLAGS	\
+	assert(d)
+
 PERL_CALLCONV U8*	Perl_uvuni_to_utf8(pTHX_ U8 *d, UV uv)
 			__attribute__deprecated__
 			__attribute__nonnull__(pTHX_1);
@@ -4749,6 +4760,7 @@ PERL_CALLCONV U8*	Perl_uvuni_to_utf8(pTHX_ U8 *d, UV uv)
 	assert(d)
 
 PERL_CALLCONV U8*	Perl_uvuni_to_utf8_flags(pTHX_ U8 *d, UV uv, UV flags)
+			__attribute__deprecated__
 			__attribute__nonnull__(pTHX_1);
 #define PERL_ARGS_ASSERT_UVUNI_TO_UTF8_FLAGS	\
 	assert(d)
