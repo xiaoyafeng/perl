@@ -15,7 +15,6 @@ plan(tests => 115);
 
 use Config;
 use Errno qw(EACCES EISDIR);
-use POSIX qw(setlocale LC_ALL);
 
 # due to a bug in VMS's piping which makes it impossible for runperl()
 # to emulate echo -n (ie. stdin always winds up with a newline), these 
@@ -109,13 +108,16 @@ SWTEST
     );
 }
 
-{
+SKIP: {
+    skip_without_dynamic_extension("POSIX");
+    require POSIX;
+
     my $tempdir = tempfile;
     mkdir $tempdir, 0700 or die "Can't mkdir '$tempdir': $!";
 
     local $ENV{'LC_ALL'} = 'C'; # Keep the test simple: expect English
     local $ENV{LANGUAGE} = 'C';
-    setlocale(LC_ALL, "C");
+    POSIX::setlocale(POSIX::LC_ALL(), "C");
 
     # Win32 won't let us open the directory, so we never get to die with
     # EISDIR, which happens after open.
