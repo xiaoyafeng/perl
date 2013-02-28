@@ -15,7 +15,7 @@ my $file = tempfile();
 my $ungetc_count = 8200;    # Somewhat over the likely buffer size
 
 {
-    plan(tests => 16 + 2 * $ungetc_count);
+    plan(tests => 16 + (is_miniperl() ? 0 : 2 * $ungetc_count));
     ok(open(FOO,">:crlf",$file));
     ok(print FOO 'a'.((('a' x 14).qq{\n}) x 2000) || close(FOO));
     ok(open(FOO,"<:crlf",$file));
