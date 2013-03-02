@@ -136,8 +136,24 @@ S_sv_or_pv_pos_u2b(pTHX_ SV *sv, const char *pv, STRLEN pos, STRLEN *lenp)
 
 /* ------------------------------- utf8.h ------------------------------- */
 
-/* These exist only to replace the macros they formerly were so that their use
- * can be deprecated */
+PERL_STATIC_INLINE void
+S_append_utf8_from_native_byte(const U8 byte, U8** dest)
+{
+    /* Takes an input 'byte' (Latin1 or EBCDIC) and appends it to the UTF-8
+     * encoded string at '*dest', updating '*dest' to include it */
+
+    PERL_ARGS_ASSERT_APPEND_UTF8_FROM_NATIVE_BYTE;
+
+    if (NATIVE_IS_INVARIANT(byte))
+        *(*dest)++ = byte;
+    else {
+        *(*dest)++ = UTF8_EIGHT_BIT_HI(byte);
+        *(*dest)++ = UTF8_EIGHT_BIT_LO(byte);
+    }
+}
+
+/* These two exist only to replace the macros they formerly were so that their
+ * use can be deprecated */
 
 PERL_STATIC_INLINE bool
 S_isIDFIRST_lazy(pTHX_ const char* p)
@@ -153,20 +169,4 @@ S_isALNUM_lazy(pTHX_ const char* p)
     PERL_ARGS_ASSERT_ISALNUM_LAZY;
 
     return isALNUM_lazy_if(p,1);
-}
-
-PERL_STATIC_INLINE void
-S_append_utf8_from_native_byte(const U8 byte, U8** dest)
-{
-    /* Takes an input 'byte' (Latin1 or EBCDIC) and appends it to the UTF-8
-     * encoded string at '*dest', updating '*dest' to include it */
-
-    PERL_ARGS_ASSERT_APPEND_UTF8_FROM_NATIVE_BYTE;
-
-    if (NATIVE_IS_INVARIANT(byte))
-        *(*dest)++ = byte;
-    else {
-        *(*dest)++ = UTF8_EIGHT_BIT_HI(byte);
-        *(*dest)++ = UTF8_EIGHT_BIT_LO(byte);
-    }
 }
