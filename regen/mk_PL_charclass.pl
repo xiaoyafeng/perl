@@ -20,6 +20,9 @@ require 'regen/regen_lib.pl';
 
 # This program need be run only when adding new properties to it, or upon a
 # new Unicode release, to make sure things haven't been changed by it.
+#
+# NOTE that Porting/reorder_l1_charclass_tab.pl depends on the current syntax
+# of l1_charclass_tab.h.
 
 my @properties = qw(
     NONLATIN1_FOLD
