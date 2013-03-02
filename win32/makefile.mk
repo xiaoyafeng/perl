@@ -1059,21 +1059,21 @@ config.w32 : $(CFGSH_TMPL)
 # Edit config.gc, then make perl using GCC in a minimal configuration (i.e.
 # with MULTI, ITHREADS, IMP_SYS, LARGE_FILES and PERLIO off), then make
 # this target to regenerate config_H.gc.
-regen_config_h:
+regen_config_h: ..\lib\buildcustomize.pl
 	$(MINIPERL) -I..\lib config_sh.PL --cfgsh-option-file $(mktmp $(CFG_VARS)) \
 	    $(CFGSH_TMPL) > ..\config.sh
 	$(MINIPERL) -I..\lib ..\configpm --chdir=..
 	-del /f $(CFGH_TMPL)
-	-$(MINIPERL) -I..\lib $(ICWD) config_h.PL "ARCHPREFIX=$(ARCHPREFIX)"
+	-$(MINIPERL) -I..\lib config_h.PL "ARCHPREFIX=$(ARCHPREFIX)"
 	rename config.h $(CFGH_TMPL)
 
-$(CONFIGPM) : $(MINIPERL) ..\config.sh config_h.PL ..\minimod.pl
+$(CONFIGPM) : $(MINIPERL) ..\config.sh config_h.PL ..\minimod.pl ..\lib\buildcustomize.pl
 	$(MINIPERL) -I..\lib ..\configpm --chdir=..
 	if exist lib\* $(RCOPY) lib\*.* ..\lib\$(NULL)
 	$(XCOPY) ..\*.h $(COREDIR)\*.*
 	$(XCOPY) *.h $(COREDIR)\*.*
 	$(RCOPY) include $(COREDIR)\*.*
-	$(MINIPERL) -I..\lib $(ICWD) config_h.PL "ARCHPREFIX=$(ARCHPREFIX)" \
+	$(MINIPERL) -I..\lib config_h.PL "ARCHPREFIX=$(ARCHPREFIX)" \
 	    || $(MAKE) $(MAKEMACROS) $(CONFIGPM) $(MAKEFILE)
 
 ..\lib\buildcustomize.pl: $(MINIPERL) ..\write_buildcustomize.pl
@@ -1257,8 +1257,8 @@ $(PERLEXESTATIC): $(PERLSTATICLIB) $(CONFIGPM) $(PERLEXEST_OBJ) $(PERLEXE_RES)
 	$(EMBED_EXE_MANI)
 .ENDIF
 
-MakePPPort: $(MINIPERL) $(CONFIGPM) Extensions_nonxs
-	$(MINIPERL) -I..\lib $(ICWD) ..\mkppport
+MakePPPort: $(MINIPERL) $(CONFIGPM) Extensions_nonxs ..\lib\buildcustomize.pl
+	$(MINIPERL) -I..\lib ..\mkppport
 
 #-------------------------------------------------------------------------------
 # There's no direct way to mark a dependency on
