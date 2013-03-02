@@ -334,7 +334,7 @@ $(PERLDELTA_CURRENT) : [.pod]perldelta.pod
 [.pod]perlapi.pod : embed.fnc autodoc.pl $(MINIPERL_EXE)
 	$(MINIPERL) autodoc.pl
 
-[.pod]perlmodlib.pod : [.pod]perlmodlib.pl MANIFEST $(MINIPERL_EXE)
+[.pod]perlmodlib.pod : [.pod]perlmodlib.pl MANIFEST $(MINIPERL_EXE) [.lib]buildcustomize.pl
 	$(MINIPERL) [.pod]perlmodlib.pl "-q"
 
 [.pod]perlintern.pod : embed.fnc autodoc.pl $(MINIPERL_EXE)
@@ -438,7 +438,7 @@ $(ARCHDIR)Config_heavy.pl : [.lib]Config_heavy.pl
 $(ARCHDIR)vmspipe.com : vmspipe.com
         Copy $(MMS$SOURCE) $(ARCHDIR)
 
-unidatafiles.ts : $(MINIPERL_EXE) [.lib]Config.pm [.lib.unicore]mktables nonxsext
+unidatafiles.ts : $(MINIPERL_EXE) [.lib]Config.pm [.lib.unicore]mktables nonxsext [.lib]buildcustomize.pl
 	$(MINIPERL) [.lib.unicore]mktables "-C" [.lib.unicore] "-P" [.pod] "-makelist" "-maketest" "-p"
 	@ If F$Search("$(MMS$TARGET)").nes."" Then Delete/NoLog/NoConfirm $(MMS$TARGET);*
 	@ Copy/NoConfirm _NLA0: $(MMS$TARGET)
@@ -580,7 +580,7 @@ nonxsext : $(LIBPREREQ) preplibrary $(MINIPERL_EXE) [.pod]perlfunc.pod
 preplibrary : $(MINIPERL_EXE) $(LIBPREREQ) 
 	@ $(NOOP)
 
-makeppport : $(MINIPERL_EXE) $(ARCHDIR)Config.pm nonxsext
+makeppport : $(MINIPERL_EXE) $(ARCHDIR)Config.pm nonxsext [.lib]buildcustomize.pl
 	$(MINIPERL) mkppport
 
 install.html : [.pod]perltoc.pod
