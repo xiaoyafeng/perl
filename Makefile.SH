@@ -495,8 +495,6 @@ perltoc_pod_prereqs = extra.pods pod/perl51710delta.pod pod/perlapi.pod pod/perl
 generated_pods = pod/perltoc.pod $(perltoc_pod_prereqs)
 generated_headers = uudmap.h bitcount.h mg_data.h
 
-Icwd = -Idist/Cwd -Idist/Cwd/lib -Idist/Carp/lib
-
 lintflags = \
     -b \
     -n \
@@ -1022,8 +1020,8 @@ makeppport: \$(MINIPERL_EXE) \$(CONFIGPM)
 *)
 $spitshell >>$Makefile <<'!NO!SUBS!'
 .PHONY: makeppport
-makeppport: $(MINIPERL_EXE) $(CONFIGPM) $(nonxs_ext)
-	$(MINIPERL) $(Icwd) mkppport
+makeppport: $(MINIPERL_EXE) $(CONFIGPM) $(nonxs_ext) lib/buildcustomize.pl
+	$(MINIPERL) mkppport
 
 !NO!SUBS!
 ;;
@@ -1047,8 +1045,8 @@ lib/buildcustomize.pl: $(MINIPERL_EXE) write_buildcustomize.pl
 
 unidatafiles $(unidatafiles) pod/perluniprops.pod: uni.data
 
-uni.data: $(MINIPERL_EXE) $(CONFIGPM) lib/unicore/mktables $(nonxs_ext)
-	$(MINIPERL) $(Icwd) lib/unicore/mktables -C lib/unicore -P pod -maketest -makelist -p
+uni.data: $(MINIPERL_EXE) $(CONFIGPM) lib/unicore/mktables $(nonxs_ext) lib/buildcustomize.pl
+	$(MINIPERL) lib/unicore/mktables -C lib/unicore -P pod -maketest -makelist -p
 #	Commented out so always runs, mktables looks at far more files than we
 #	can in this makefile to decide if needs to run or not
 #	touch uni.data
@@ -1064,8 +1062,8 @@ pod/perlapi.pod: pod/perlintern.pod
 pod/perlintern.pod: $(MINIPERL_EXE) autodoc.pl embed.fnc
 	$(MINIPERL) autodoc.pl
 
-pod/perlmodlib.pod: $(MINIPERL_EXE) pod/perlmodlib.PL MANIFEST
-	$(MINIPERL) $(Icwd) pod/perlmodlib.PL -q
+pod/perlmodlib.pod: $(MINIPERL_EXE) pod/perlmodlib.PL MANIFEST lib/buildcustomize.pl
+	$(MINIPERL) pod/perlmodlib.PL -q
 
 pod/perl51710delta.pod: pod/perldelta.pod
 	$(RMS) pod/perl51710delta.pod
