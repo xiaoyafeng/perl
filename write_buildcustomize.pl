@@ -7,7 +7,7 @@ if (@ARGV) {
     unshift @INC, 'lib';
 }
 
-unshift @INC, ('dist/Cwd', 'dist/Cwd/lib');
+unshift @INC, ('dist/Cwd', 'dist/Cwd/lib', 'dist/constant/lib', 'ext/re');
 require File::Spec::Functions;
 
 # To clarify, this isn't the entire suite of modules considered "toolchain"
@@ -29,6 +29,7 @@ my @toolchain = qw(cpan/AutoLoader/lib
 		   cpan/File-Path/lib
 		   ext/re
 		   dist/Term-ReadLine/lib
+		   dist/constant/lib
 		   );
 
 # Used only in ExtUtils::Liblist::Kid::_win32_ext()
