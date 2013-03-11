@@ -4647,6 +4647,7 @@ Porting/README.y2038		Perl notes for the 2038 fix
 Porting/release_announcement_template.txt
 Porting/release_managers_guide.pod	Release Manager's Guide
 Porting/release_schedule.pod	Schedule for future releases
+Porting/reorder_charclass_invlists.pl	For porting to non-ASCII platform
 Porting/reorder_l1_char_class_tab.pl	For porting to non-ASCII platform
 Porting/rt_list_patches		A tool to help you apply patches from RT
 Porting/sort_perldiag.pl	Keep our diagnostics orderly
