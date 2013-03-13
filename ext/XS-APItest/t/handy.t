@@ -133,7 +133,7 @@ foreach my $name (sort keys %properties) {
                     fail($@);
                 }
                 else {
-                    my $truth = truth($matches && $i < 128);
+                    my $truth = truth($matches && utf8::native_to_unicode($i) < 128);
                     is ($ret, $truth, "is${function}_A( $display_name ) == $truth");
                 }
                 $ret = truth eval "test_is${function}_L1($i)";
@@ -154,7 +154,7 @@ foreach my $name (sort keys %properties) {
                     fail($@);
                 }
                 else {
-                    my $truth = truth($matches && $i < 128);
+                    my $truth = truth($matches && utf8::native_to_unicode($i) < 128);
                     is ($ret, $truth, "is${function}_LC( $display_name ) == $truth");
                 }
             }
@@ -176,7 +176,7 @@ foreach my $name (sort keys %properties) {
                 fail($@);
             }
             else {
-                my $truth = truth($matches && ($i < 128 || $i > 255));
+                my $truth = truth($matches && (utf8::native_to_unicode($i) < 128 || $i > 255));
                 is ($ret, $truth, "is${function}_LC_uvchr( $display_name ) == $truth");
             }
         }
@@ -200,7 +200,7 @@ foreach my $name (sort keys %properties) {
                 fail($@);
             }
             else {
-                my $truth = truth($matches && ($i < 128 || $i > 255));
+                my $truth = truth($matches && (utf8::native_to_unicode($i) < 128 || $i > 255));
                 is ($ret, $truth, "is${function}_LC_utf8( $display_name ) == $truth");
             }
         }
