@@ -175,18 +175,13 @@ esc_q_utf8(pTHX_ SV* sv, const char *src, STRLEN slen)
     STRLEN normal = 0;
     int increment;
 
-    /* this will need EBCDICification */
     for (s = src; s < send; s += increment) {
         const UV k = utf8_to_uvchr_buf((U8*)s, (U8*) send, NULL);
 
         /* check for invalid utf8 */
         increment = (k == 0 && *s != '\0') ? 1 : UTF8SKIP(s);
 
-#ifdef EBCDIC
-	if (!isprint(k) || k > 256) {
-#else
-	if (k > 127) {
-#endif
+	if (!isASCII(k)) {
             /* 4: \x{} then count the number of hex digits.  */
             grow += 4 + (k <= 0xFF ? 2 : k <= 0xFFF ? 3 : k <= 0xFFFF ? 4 :
 #if UVSIZE == 4
@@ -221,11 +216,7 @@ esc_q_utf8(pTHX_ SV* sv, const char *src, STRLEN slen)
                 *r++ = (char)k;
             }
             else
-#ifdef EBCDIC
-	      if (isprint(k) && k < 256)
-#else
-	      if (k < 0x80)
-#endif
+	      if (isASCII(k))
                 *r++ = (char)k;
             else {
 #if PERL_VERSION < 10
