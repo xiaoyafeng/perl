@@ -1082,12 +1082,6 @@ DD_dump(pTHX_ SV *val, const char *name, STRLEN namelen, SV *retval, HV *seenhv,
 
 MODULE = Data::Dumper		PACKAGE = Data::Dumper         PREFIX = Data_Dumper_
 
-#
-# This is the exact equivalent of Dump.  Well, almost. The things that are
-# different as of now (due to Laziness):
-#   * doesn't do double-quotes yet.
-#
-
 void
 Data_Dumper_Dumpxs(href, ...)
 	SV	*href;
@@ -1107,6 +1101,14 @@ Data_Dumper_Dumpxs(href, ...)
 	    char tmpbuf[1024];
 	    I32 gimme = GIMME;
             int use_sparse_seen_hash = 0;
+
+            /*
+
+            This is the exact equivalent of Dump.  Well, almost. The things that are
+            different as of now (due to Laziness):
+            * doesn't do double-quotes yet.
+
+            */
 
 	    if (!SvROK(href)) {		/* call new to get an object first */
 		if (items < 2)
