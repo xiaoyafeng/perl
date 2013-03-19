@@ -67,7 +67,7 @@ my $skip_apparently_redundant = ! $ENV{PERL_RUN_SLOW_TESTS};
 sub range_type {
     my $ord = ord shift;
 
-    return $ASCII if $ord < 128;
+    return $ASCII if ord_native_to_latin1($ord) < 128;
     return $Latin1 if $ord < 256;
     return $Unicode;
 }
@@ -375,8 +375,8 @@ foreach my $to (sort { (length $a == length $b)
 }
 
 # For each range type, test additionally a character that folds to itself
-add_test(chr 0x3A, chr 0x3A);
-add_test(chr 0xF7, chr 0xF7);
+add_test(":", ":");
+add_test(chr ord_latin1_to_native(0xF7), chr ord_latin1_to_native(0xF7));
 add_test(chr 0x2C7, chr 0x2C7);
 
 # To cut down on the number of tests
@@ -418,7 +418,7 @@ if($Config{d_setlocale}) {
         # legal, but since we don't know what the right answers should be,
         # skip the locale tests in that situation.
         for my $i (128 .. 255) {
-            my $char = chr($i);
+            my $char = chr(ord_latin1_to_native($i));
             goto untestable_locale if uc($char) ne $char || lc($char) ne $char;
         }
         push @charsets, 'l';
@@ -468,13 +468,13 @@ foreach my $test (sort { numerically } keys %tests) {
 
     my $target_above_latin1 = grep { $_ > 255 } @target;
     my $pattern_above_latin1 = grep { $_ > 255 } @pattern;
-    my $target_has_ascii = grep { $_ < 128 } @target;
-    my $pattern_has_ascii = grep { $_ < 128 } @pattern;
-    my $target_only_ascii = ! grep { $_ > 127 } @target;
-    my $pattern_only_ascii = ! grep { $_ > 127 } @pattern;
+    my $target_has_ascii = grep { ord_native_to_latin1($_ < 128) } @target;
+    my $pattern_has_ascii = grep { ord_native_to_latin1($_ < 128) } @pattern;
+    my $target_only_ascii = ! grep { ord_native_to_latin1($_ > 127) } @target;
+    my $pattern_only_ascii = ! grep { ord_native_to_latin1($_ > 127) } @pattern;
     my $target_has_latin1 = grep { $_ < 256 } @target;
-    my $target_has_upper_latin1 = grep { $_ < 256 && $_ > 127 } @target;
-    my $pattern_has_upper_latin1 = grep { $_ < 256 && $_ > 127 } @pattern;
+    my $target_has_upper_latin1 = grep { $_ < 256 && $_ > ord_native_to_latin1(127) } @target;
+    my $pattern_has_upper_latin1 = grep { $_ < 256 && $_ > ord_native_to_latin1(127) } @pattern;
     my $pattern_has_latin1 = grep { $_ < 256 } @pattern;
     my $is_self = @target == 1 && @pattern == 1 && $target[0] == $pattern[0];
 
@@ -616,7 +616,7 @@ foreach my $test (sort { numerically } keys %tests) {
           my $lhs_str = eval qq{"$lhs"}; fail($@) if $@;
           my @rhs = @x_pattern;
           my $rhs = join "", @rhs;
-          my $should_fail = (! $uni_semantics && $ord >= 128 && $ord < 256 && ! $is_self)
+          my $should_fail = (! $uni_semantics && ord_native_to_latin1($ord) >= 128 && $ord < 256 && ! $is_self)
                             || ($charset eq 'aa' && $target_has_ascii != $pattern_has_ascii)
                             || ($charset eq 'l' && $target_has_latin1 != $pattern_has_latin1);
 
