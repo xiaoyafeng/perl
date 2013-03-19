@@ -329,7 +329,18 @@ sub new {
         my $str= $txt;
         if ( $str =~ /^[""]/ ) {
             $str= eval $str;
-        } elsif ($str =~ / - /x ) { # A range:  Replace this element on the
+            if (! ASCII_PLATFORM) { # Convert string to native
+                my $native_str = "";
+                for my $ch ( split //, $str ) {
+                    $native_str .= chr utf8::unicode_to_native(ord $ch);
+                }
+                $str = $native_str;
+            }
+        }
+        elsif ( $str =~ s/ ^ N ( [""] )/$1/x ) {  # String is in native charset
+            $str= eval $str;
+        }
+        elsif ($str =~ / - /x ) { # A range:  Replace this element on the
                                     # list with its expansion
             my ($lower, $upper) = $str =~ / 0x (.+?) \s* - \s* 0x (.+) /x;
             die "Format must be like '0xDEAD - 0xBEAF'; instead was '$str'" if ! defined $lower || ! defined $upper;
@@ -1316,7 +1327,8 @@ if ( !caller ) {
 #
 # The subsequent lines give what code points go into the class defined by the
 # macro.  Multiple characters may be specified via a string like "\x0D\x0A",
-# enclosed in quotes.  Otherwise the lines consist of one of:
+# enclosed in quotes.  The characters are considered to be Unicode, and will
+# be translated into native.  Otherwise the lines consist of one of:
 #   1)  a single Unicode code point, prefaced by 0x
 #   2)  a single range of Unicode code points separated by a minus (and
 #       optional space)
@@ -1491,27 +1503,27 @@ GCB_V: Grapheme_Cluster_Break=V
 # This hasn't been commented out, because we haven't an EBCDIC platform to run
 # it on, and the 3 types of EBCDIC allegedly supported by Perl would have
 # different results
-UTF8_CHAR: Matches utf8 from 1 to 5 bytes
-=> UTF8 :safe only_ebcdic_platform
-0x0 - 0x3FFFFF:
+#UTF8_CHAR: Matches utf8 from 1 to 5 bytes
+#=> UTF8 :safe only_ebcdic_platform
+#0x0 - 0x3FFFFF:
 
 QUOTEMETA: Meta-characters that \Q should quote
 => high :fast
 \p{_Perl_Quotemeta}
 
+MULTI_CHAR_FOLD: multi-char strings that are folded to by a single character
+=> UTF8 :safe
+do regen/regcharclass_multi_char_folds.pl
+
+# 1 => All folds
+&regcharclass_multi_char_folds::multi_char_folds(1)
+
+MULTI_CHAR_FOLD: multi-char strings that are folded to by a single character
+=> LATIN1 :safe
+
+# 0 => Latin1-only
+&regcharclass_multi_char_folds::multi_char_folds(0)
+
 PATWS: pattern white space
 => generic generic_non_low cp : fast safe
 \p{PatWS}
-
-#MULTI_CHAR_FOLD: multi-char strings that are folded to by a single character
-#=> UTF8 :safe
-#do regen/regcharclass_multi_char_folds.pl
-#
-## 1 => All folds
-#&regcharclass_multi_char_folds::multi_char_folds(1)
-#
-#MULTI_CHAR_FOLD: multi-char strings that are folded to by a single character
-#=> LATIN1 :safe
-#
-#&regcharclass_multi_char_folds::multi_char_folds(0)
-## 0 => Latin1-only

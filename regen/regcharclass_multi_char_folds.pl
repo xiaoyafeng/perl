@@ -5,9 +5,10 @@ use warnings;
 use Unicode::UCD "prop_invmap";
 
 # This returns an array of strings of the form
-#   "\x{foo}\x{bar}\x{baz}"
+#   N"\x{foo}\x{bar}\x{baz}"
 # of the sequences of code points that are multi-character folds in the
-# current Unicode version.  If the parameter is 1, all such folds are
+# current Unicode version.  The N indicates that they are in the platform
+# native character set.  If the parameter is 1, all such folds are
 # returned.  If the parameters is 0, only the ones containing exclusively
 # Latin1 characters are returned.  In the latter case all combinations of
 # Latin1 characters that can fold to the base one are returned.  Thus for
@@ -104,7 +105,7 @@ sub multi_char_folds ($) {
         }
     }
 
-    return @folds;
+    return ( map { "N$_" } @folds );
 }
 
 1
