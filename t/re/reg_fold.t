@@ -72,7 +72,6 @@ for  (@folds) {
                 $rhs = $chr;
                 $rhs = "[$rhs]" if $charclass;
             } else {
-                #next if $charclass && @folded > 1;
                 $lhs = $chr;
                 $rhs = "";
                 foreach my $rhs_char (@folded) {
