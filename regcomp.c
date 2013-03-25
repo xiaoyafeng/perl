@@ -1712,7 +1712,7 @@ S_make_trie(pTHX_ RExC_state_t *pRExC_state, regnode *startbranch, regnode *firs
 		    if ( !UTF ) {
 			/* store first byte of utf8 representation of
 			   variant codepoints */
-			if (! NATIVE_IS_INVARIANT(uvc)) {
+			if (! UVCHR_IS_INVARIANT(uvc)) {
 			    TRIE_BITMAP_SET(trie, UTF8_TWO_BYTE_HI(uvc));
 			}
 		    }
@@ -11042,7 +11042,7 @@ tryagain:
                          * character using utf8.  If we start to fold non-UTF
                          * patterns, be sure to update join_exact() */
                         if (LOC && ender < 256) {
-                            if (NATIVE_IS_INVARIANT(ender)) {
+                            if (UVCHR_IS_INVARIANT(ender)) {
                                 *s = (U8) ender;
                                 foldlen = 1;
                             } else {

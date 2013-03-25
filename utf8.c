@@ -1654,7 +1654,7 @@ Perl__to_upper_title_latin1(pTHX_ const U8 c, U8* p, STRLEN *lenp, const char S_
 
     assert(S_or_s == 'S' || S_or_s == 's');
 
-    if (NATIVE_IS_INVARIANT(converted)) { /* No difference between the two for
+    if (UVCHR_IS_INVARIANT(converted)) { /* No difference between the two for
 					     characters in this range */
 	*p = (U8) converted;
 	*lenp = 1;
@@ -1755,7 +1755,7 @@ S_to_lower_latin1(pTHX_ const U8 c, U8* p, STRLEN *lenp)
     U8 converted = toLOWER_LATIN1(c);
 
     if (p != NULL) {
-	if (NATIVE_IS_INVARIANT(converted)) {
+	if (NATIVE_BYTE_IS_INVARIANT(converted)) {
 	    *p = converted;
 	    *lenp = 1;
 	}
@@ -1807,7 +1807,7 @@ Perl__to_fold_latin1(pTHX_ const U8 c, U8* p, STRLEN *lenp, const bool flags)
 	converted = toLOWER_LATIN1(c);
     }
 
-    if (NATIVE_IS_INVARIANT(converted)) {
+    if (UVCHR_IS_INVARIANT(converted)) {
 	*p = (U8) converted;
 	*lenp = 1;
     }
@@ -3167,7 +3167,7 @@ Perl_swash_fetch(pTHX_ SV *swash, const U8 *ptr, bool do_utf8)
     U32 bit;
     SV *swatch;
     U8 tmputf8[2];
-    const UV c = *ptr;
+    const U8 c = *ptr;
 
     PERL_ARGS_ASSERT_SWASH_FETCH;
 
@@ -3181,7 +3181,7 @@ Perl_swash_fetch(pTHX_ SV *swash, const U8 *ptr, bool do_utf8)
     }
 
     /* Convert to utf8 if not already */
-    if (!do_utf8 && !NATIVE_IS_INVARIANT(c)) {
+    if (!do_utf8 && !NATIVE_BYTE_IS_INVARIANT(c)) {
 	tmputf8[0] = (U8)UTF8_EIGHT_BIT_HI(c);
 	tmputf8[1] = (U8)UTF8_EIGHT_BIT_LO(c);
 	ptr = tmputf8;
