@@ -1,10 +1,10 @@
 
 BEGIN {
-    unless ("A" eq pack('U', 0x41)) {
-	print "1..0 # Unicode::Normalize " .
-	    "cannot stringify a Unicode code point\n";
-	exit 0;
-    }
+#?    unless ("A" eq pack('U', 0x41)) {
+#?	print "1..0 # Unicode::Normalize " .
+#?	    "cannot stringify a Unicode code point\n";
+#?	exit 0;
+#?    }
 }
 
 BEGIN {
