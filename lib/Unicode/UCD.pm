@@ -5,7 +5,7 @@ use warnings;
 no warnings 'surrogate';    # surrogates can be inputs to this
 use charnames ();
 
-our $VERSION = '0.51';
+our $VERSION = '0.52';
 
 require Exporter;
 
@@ -663,7 +663,7 @@ sub charblock {
     my $range      = charscript('Thai');
 
 With a L</code point argument> charscript() returns the I<script> the
-code point belongs to, e.g.  C<Latin>, C<Greek>, C<Han>.
+code point belongs to, e.g., C<Latin>, C<Greek>, C<Han>.
 If the code point is unassigned or the Unicode version being used is so early
 that it doesn't have scripts, this function returns C<"Unknown">.
 
