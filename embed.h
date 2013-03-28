@@ -959,6 +959,7 @@
 #define _get_swash_invlist(a)	Perl__get_swash_invlist(aTHX_ a)
 #define _invlist_contains_cp(a,b)	S__invlist_contains_cp(aTHX_ a,b)
 #define _invlist_contents(a)	Perl__invlist_contents(aTHX_ a)
+#define _invlist_dump(a,b)	Perl__invlist_dump(aTHX_ a,b)
 #define _invlist_len(a)		S__invlist_len(aTHX_ a)
 #define _invlist_search(a,b)	Perl__invlist_search(aTHX_ a,b)
 #define _swash_inversion_hash(a)	Perl__swash_inversion_hash(aTHX_ a)
