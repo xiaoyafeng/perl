@@ -3192,7 +3192,6 @@ Perl_swash_fetch(pTHX_ SV *swash, const U8 *ptr, bool do_utf8)
      * So the key in the hash (klen) is length of encoded char -1
      */
     klen = UTF8SKIP(ptr) - 1;
-    off  = ptr[klen];
 
     if (klen == 0) {
       /* If char is invariant then swatch is for all the invariant chars
