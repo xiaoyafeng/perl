@@ -240,7 +240,7 @@ of the bidi type name.
 is empty if I<code> has no decomposition; or is one or more codes
 (separated by spaces) that, taken in order, represent a decomposition for
 I<code>.  Each has at least four hexdigits.
-The codes may be preceded by a word enclosed in angle brackets then a space,
+The codes may be preceded by a word enclosed in angle brackets, then a space,
 like C<E<lt>compatE<gt> >, giving the type of decomposition
 
 This decomposition may be an intermediate one whose components are also
@@ -248,7 +248,7 @@ decomposable.  Use L<Unicode::Normalize> to get the final decomposition.
 
 =item B<decimal>
 
-if I<code> is a decimal digit this is its integer numeric value
+if I<code> represents a decimal digit this is its integer numeric value
 
 =item B<digit>
 
@@ -593,7 +593,7 @@ sub charinrange {
 
     my $range     = charblock('Armenian');
 
-With a L</code point argument> charblock() returns the I<block> the code point
+With a L</code point argument> C<charblock()> returns the I<block> the code point
 belongs to, e.g.  C<Basic Latin>.  The old-style block name is returned (see
 L</Old-style versus new-style block names>).
 If the code point is unassigned, this returns the block it would belong to if
@@ -602,7 +602,7 @@ have blocks, all code points are considered to be in C<No_Block>.)
 
 See also L</Blocks versus Scripts>.
 
-If supplied with an argument that can't be a code point, charblock() tries to
+If supplied with an argument that can't be a code point, C<charblock()> tries to
 do the opposite and interpret the argument as an old-style block name.  On an
 ASCII platform, the return value is a I<range set> with one range: an
 anonymous list with a single element that consists of another anonymous list
@@ -702,7 +702,7 @@ sub charblock {
 
     my $range      = charscript('Thai');
 
-With a L</code point argument> charscript() returns the I<script> the
+With a L</code point argument> C<charscript()> returns the I<script> the
 code point belongs to, e.g., C<Latin>, C<Greek>, C<Han>.
 If the code point is unassigned or the Unicode version being used is so early
 that it doesn't have scripts, this function returns C<"Unknown">.
@@ -761,7 +761,7 @@ sub charscript {
 
     my $charblocks = charblocks();
 
-charblocks() returns a reference to a hash with the known block names
+C<charblocks()> returns a reference to a hash with the known block names
 as the keys, and the code point ranges (see L</charblock()>) as the values.
 
 The names are in the old-style (see L</Old-style versus new-style block
@@ -785,7 +785,7 @@ sub charblocks {
 
     my $charscripts = charscripts();
 
-charscripts() returns a reference to a hash with the known script
+C<charscripts()> returns a reference to a hash with the known script
 names as the keys, and the code point ranges (see L</charscript()>) as
 the values.
 
@@ -806,7 +806,7 @@ sub charscripts {
 In addition to using the C<\p{Blk=...}> and C<\P{Blk=...}> constructs, you
 can also test whether a code point is in the I<range> as returned by
 L</charblock()> and L</charscript()> or as the values of the hash returned
-by L</charblocks()> and L</charscripts()> by using charinrange():
+by L</charblocks()> and L</charscripts()> by using C<charinrange()>:
 
     use Unicode::UCD qw(charscript charinrange);
 
@@ -936,7 +936,9 @@ sub bidi_types {
     my $compexcl = compexcl(0x09dc);
 
 This routine returns C<undef> if the Unicode version being used is so early
-that it doesn't have this property.  It is included for backwards
+that it doesn't have this property.
+
+C<compexcl()> is included for backwards
 compatibility, but as of Perl 5.12 and more modern Unicode versions, for
 most purposes it is probably more convenient to use one of the following
 instead:
@@ -1456,10 +1458,11 @@ sub casespec {
 If used with a single argument in a scalar context, returns the string
 consisting of the code points of the named sequence, or C<undef> if no
 named sequence by that name exists.  If used with a single argument in
-a list context, it returns the list of the ordinals of the code points.  If used
-with no
-arguments in a list context, returns a hash with the names of the
-named sequences as the keys and the named sequences as strings as
+a list context, it returns the list of the ordinals of the code points.
+
+If used with no
+arguments in a list context, it returns a hash with the names of all the
+named sequences as the keys and their sequences as strings as
 the values.  Otherwise, it returns C<undef> or an empty list depending
 on the context.
 
@@ -1575,7 +1578,7 @@ sub _numeric {
     my $val = num("123");
     my $one_quarter = num("\N{VULGAR FRACTION 1/4}");
 
-C<num> returns the numeric value of the input Unicode string; or C<undef> if it
+C<num()> returns the numeric value of the input Unicode string; or C<undef> if it
 doesn't think the entire string has a completely valid, safe numeric value.
 
 If the string is just one character in length, the Unicode numeric value
