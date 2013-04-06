@@ -1418,6 +1418,7 @@ cpan/IO-Socket-IP/t/15io-socket.t			IO::Socket::IP tests
 cpan/IO-Socket-IP/t/16v6only.t				IO::Socket::IP tests
 cpan/IO-Socket-IP/t/17gai-flags.t			IO::Socket::IP tests
 cpan/IO-Socket-IP/t/18fdopen.t				IO::Socket::IP tests
+cpan/IO-Socket-IP/t/19no-addrs.t			IO::Socket::IP tests
 cpan/IO-Socket-IP/t/20nonblocking-connect.t		IO::Socket::IP tests
 cpan/IO-Socket-IP/t/21nonblocking-connect-internet.t	IO::Socket::IP tests
 cpan/IO-Socket-IP/t/99pod.t				IO::Socket::IP tests
@@ -3340,6 +3341,7 @@ dist/IO/lib/IO/Poll.pm		IO system poll() interface
 dist/IO/lib/IO/Seekable.pm	IO methods for seekable handles
 dist/IO/lib/IO/Select.pm	IO system select() interface
 dist/IO/lib/IO/Socket/INET.pm	IO INET specific socket methods
+dist/IO/lib/IO/Socket/INET.pod	IO INET documentation
 dist/IO/lib/IO/Socket.pm	IO socket handle package
 dist/IO/lib/IO/Socket/UNIX.pm	IO UNIX specific socket methods
 dist/IO/Makefile.PL		IO extension makefile writer
