@@ -72,6 +72,7 @@ no_index:
     - dist/IO/lib/IO/Select.pm
     - dist/IO/lib/IO/Socket.pm
     - dist/IO/lib/IO/Socket/INET.pm
+    - dist/IO/lib/IO/Socket/INET.pod
     - dist/IO/lib/IO/Socket/UNIX.pm
     - dist/IO/Makefile.PL
     - dist/IO/poll.c
@@ -87,7 +88,6 @@ no_index:
     - dist/IO/t/io_file.t
     - dist/IO/t/io_file_export.t
     - dist/IO/t/io_linenum.t
-    - dist/IO/t/io_multihomed.t
     - dist/IO/t/io_pipe.t
     - dist/IO/t/io_poll.t
     - dist/IO/t/io_sel.t
