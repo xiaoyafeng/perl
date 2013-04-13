@@ -69,7 +69,7 @@ S_grok_bslash_c(pTHX_ const char source, const bool utf8, const bool output_warn
         /* We use isCNTRL_L1 above and not simply isCNTRL, because on EBCDIC
          * machines, things like \cT map into a C1 control.
          * toCTRL(non-control) maps into the range 0-3f, which on EBCDIC is
-         * always a control, so the above test will always fail there */
+         * always a control, so we never get here on EBCDIC */
 	if (source == '{') {
 	    Perl_ck_warner_d(aTHX_ packWARN2(WARN_DEPRECATED, WARN_SYNTAX),
                 "\"\\c{\" is deprecated and is more clearly written as \";\"");
