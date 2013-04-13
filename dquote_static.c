@@ -51,21 +51,22 @@ S_grok_bslash_c(pTHX_ const char source, const bool utf8, const bool output_warn
 
     U8 result;
 
-    if (utf8) {
-	/* Trying to deprecate non-ASCII usages.  This construct has never
-	 * worked for a utf8 variant.  So, even though are accepting non-ASCII
-	 * Latin1 in 5.14, no need to make them work under utf8 */
-	if (! isASCII(source)) {
-	    Perl_croak(aTHX_ "Character following \"\\c\" must be ASCII");
+    if (! isPRINT_A(source)) {
+        const char msg[] = "Character following \"\\c\" must be printable ASCII";
+        if (utf8) {
+            /* Trying to deprecate non-ASCII usages.  This construct has never
+            * worked for a utf8 variant.  So, even though are accepting non-ASCII
+            * Latin1 in 5.14, no need to make them work under utf8 */
+            Perl_croak(aTHX_ "%s", msg);
+        }
+        else {
+            Perl_ck_warner_d(aTHX_ packWARN2(WARN_DEPRECATED, WARN_SYNTAX), "%s",
+                                                                            msg);
 	}
     }
 
     result = toCTRL(source);
-    if (! isASCII(source)) {
-	    Perl_ck_warner_d(aTHX_ packWARN2(WARN_DEPRECATED, WARN_SYNTAX),
-			    "Character following \"\\c\" must be ASCII");
-    }
-    else if (! isCNTRL_L1(source) && ! isCNTRL_L1(result) && output_warning) {
+    if (output_warning && ! isCNTRL_L1(result)) {
         /* We use isCNTRL_L1 above and not simply isCNTRL, because on EBCDIC
          * machines, things like \cT map into a C1 control.
          * toCTRL(non-control) maps into the range 0-3f, which on EBCDIC is
