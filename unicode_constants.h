@@ -47,6 +47,9 @@
 #define LATIN_SMALL_LETTER_Y_WITH_DIAERESIS_NATIVE  0xDF    /* U+00FF */
 #define MICRO_SIGN_NATIVE  0xA0    /* U+00B5 */
 
+#define CR_NATIVE  0x0D    /* U+000D */
+#define LF_NATIVE  0x0A    /* U+000A */
+
 #endif /* H_UNICODE_CONSTANTS */
 
 /* ex: set ro: */
