@@ -121,14 +121,16 @@ fresh_perl_like(
 
 SKIP: {
     skip_if_miniperl('miniperl ignores -C', 1);
+   $ee = latin1_to_native("\xee");
+   $bytes = byte_utf8a_to_utf8n("\xc3\xae");
 fresh_perl_like(
- '
-   $a = "\xee\n";
-   print STDERR $a; warn $a;
-   utf8::upgrade($a);
-   print STDERR $a; warn $a;
- ',
-  qr/^\xc3\xae(?:\r?\n\xc3\xae){3}/,
+ "
+   \$a = \"$ee\n\";
+   print STDERR \$a; warn \$a;
+   utf8::upgrade(\$a);
+   print STDERR \$a; warn \$a;
+ ",
+  qr/^$bytes(?:\r?\n$bytes){3}/,
   { switches => ['-CE'] },
  'warn respects :utf8 layer'
 );
