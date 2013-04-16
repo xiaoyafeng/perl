@@ -10,7 +10,13 @@ use strict;
 use Config;
 use ExtUtils::MakeMaker;
 
-use Test::More tests => 15;
+use Test::More;
+if (ord("A") != 65) {
+    plan skip_all => "Uses JSON which requires an ASCII platform";
+}
+else {
+    plan tests => 15;
+}
 use MakeMaker::Test::Utils;
 use MakeMaker::Test::Setup::BFD;
 use File::Find;
