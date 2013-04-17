@@ -29,11 +29,11 @@
 #define GREEK_CAPITAL_LETTER_IOTA_UTF8  "\xCE\x99"    /* U+0399 */
 #define GREEK_SMALL_LETTER_MU_UTF8  "\xCE\xBC"    /* U+03BC */
 
+#define LATIN_CAPITAL_LETTER_SHARP_S_UTF8  "\xE1\xBA\x9E"    /* U+1E9E */
+
 #define GREEK_SMALL_LETTER_IOTA_UTF8  "\xB4\x68"    /* U+03B9 */
 
 #define GREEK_SMALL_LETTER_UPSILON_UTF8  "\xB5\x46"    /* U+03C5 */
-
-#define LATIN_CAPITAL_LETTER_SHARP_S_UTF8  "\xE1\xBA\x9E"    /* U+1E9E */
 
 #define HYPHEN_UTF8  "\xCA\x41\x57"    /* U+2010 */
 #define FIRST_SURROGATE_UTF8_FIRST_BYTE  0xDD    /* U+D800 */
@@ -41,14 +41,14 @@
 #define BOM_UTF8_TAIL  "\x73\x66\x73"    /* U+FEFF */
 
 #define DEL_NATIVE  0x07    /* U+007F */
+
+#define CR_NATIVE  0x0D    /* U+000D */
+#define LF_NATIVE  0x15    /* U+000A */
 #define LATIN_SMALL_LETTER_SHARP_S_NATIVE  0x59    /* U+00DF */
 #define LATIN_SMALL_LETTER_A_WITH_RING_ABOVE_NATIVE  0x47    /* U+00E5 */
 #define LATIN_CAPITAL_LETTER_A_WITH_RING_ABOVE_NATIVE  0x67    /* U+00C5 */
 #define LATIN_SMALL_LETTER_Y_WITH_DIAERESIS_NATIVE  0xDF    /* U+00FF */
 #define MICRO_SIGN_NATIVE  0xA0    /* U+00B5 */
-
-#define CR_NATIVE  0x0D    /* U+000D */
-#define LF_NATIVE  0x0A    /* U+000A */
 
 #endif /* H_UNICODE_CONSTANTS */
 
