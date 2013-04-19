@@ -276,7 +276,9 @@ our %Bits = (
     'qw'		=> "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00", # [36]
     'recursion'		=> "\x00\x00\x00\x00\x10\x00\x00\x00\x00\x00\x00\x00\x00\x00", # [18]
     'redefine'		=> "\x00\x00\x00\x00\x40\x00\x00\x00\x00\x00\x00\x00\x00\x00", # [19]
+
     'regexp'		=> "\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00\x00", # [20]
+
     'reserved'		=> "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x04\x00\x00\x00\x00", # [37]
     'semicolon'		=> "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10\x00\x00\x00\x00", # [38]
     'severe'		=> "\x00\x00\x00\x00\x00\x54\x05\x00\x00\x00\x00\x00\x00\x00", # [21..25]
@@ -417,17 +419,50 @@ sub import
     ${^WARNING_BITS} = @_ ? _bits($mask, @_) : $mask | $Bits{all} ;
 }
 
+sub output_enabled_names {
+    return;
+    my $mask = shift;
+    print STDERR "\n", shift, "\n";
+    my $length = length $mask;
+    for my $i (0 .. $length - 1) {
+        my $char = substr($mask, $i, 1);
+        next unless $char;
+        for my $bit (0 ..7) {
+            if (ord $char & (1 << $bit)) {
+                my $bit_pos = $i * 8 + $bit;
+                my $base = $bit_pos;
+                $base-- if $base & 1;
+                foreach my $key (keys %Offsets) {
+                    print STDERR "$bit_pos: $key\n" if $Offsets{$key} == $base;
+                }
+            }
+        }
+    }
+}
+
 sub unimport 
 {
     shift;
+    output_enabled_names($DEFAULT, 'DEFAULT');
+    if (defined ${^WARNING_BITS}) {
+        output_enabled_names(${^WARNING_BITS}, 'WARNING_BITS');
+    }
+    else {
+        #print STDERR "WARNING_BITS is not defined\n";
+    }
+    #print STDERR '$^W is ', $^W, "\n";
+    output_enabled_names($Bits{all}, 'all');
 
     my $catmask ;
     my $mask = ${^WARNING_BITS} // ($^W ? $Bits{all} : $DEFAULT) ;
+    output_enabled_names($mask, 'initial');
 
     if (vec($mask, $Offsets{'all'}, 1)) {
         $mask |= $Bits{'all'} ;
         $mask |= $DeadBits{'all'} if vec($mask, $Offsets{'all'}+1, 1);
     }
+    output_enabled_names($Bits{'regexp'}, 'regexp');
+    output_enabled_names($mask, 'before');
 
     push @_, 'all' unless @_;
 
@@ -436,13 +471,16 @@ sub unimport
 	    next; 
 	}
 	elsif ($catmask = $Bits{$word}) {
+            output_enabled_names($catmask, $word);
 	    $mask &= ~($catmask | $DeadBits{$word} | $All);
 	}
 	else
           { Croaker("Unknown warnings category '$word'")}
     }
+    output_enabled_names($mask, 'after');
 
     ${^WARNING_BITS} = $mask ;
+    output_enabled_names(${^WARNING_BITS}, '$^WARNING_BITS');
 }
 
 my %builtin_type; @builtin_type{qw(SCALAR ARRAY HASH CODE REF GLOB LVALUE Regexp)} = ();
