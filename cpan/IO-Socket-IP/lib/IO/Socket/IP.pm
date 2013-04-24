@@ -9,7 +9,7 @@ use strict;
 use warnings;
 use base qw( IO::Socket );
 
-our $VERSION = '0.19';
+our $VERSION = '0.20_001';
 
 use Carp;
 
@@ -124,14 +124,14 @@ sub import
 
    foreach ( @_ ) {
       if( $_ eq "-register" ) {
-         $pkg->register_domain( AF_INET );
-         $pkg->register_domain( $AF_INET6 ) if defined $AF_INET6;
+         IO::Socket::IP::_ForINET->register_domain( AF_INET );
+         IO::Socket::IP::_ForINET6->register_domain( $AF_INET6 ) if defined $AF_INET6;
       }
       else {
          push @symbols, $_;
       }
    }
-   
+
    @_ = ( $pkg, @symbols );
    goto &IO::Socket::import;
 }
@@ -795,7 +795,7 @@ sub peeraddr { my $self = shift; _unpack_sockaddr $self->peername }
 sub accept
 {
    my $self = shift;
-   my ( $new, $peer ) = $self->SUPER::accept or return;
+   my ( $new, $peer ) = $self->SUPER::accept( @_ ) or return;
 
    ${*$new}{$_} = ${*$self}{$_} for qw( io_socket_domain io_socket_type io_socket_proto );
 
@@ -829,6 +829,28 @@ BEGIN {
          return $type;
       };
    }
+}
+
+=head2 $inet = $sock->as_inet
+
+Returns a new L<IO::Socket::INET> instance wrapping the same filehandle. This
+may be useful in cases where it is required, for backward-compatibility, to
+have a real object of C<IO::Socket::INET> type instead of C<IO::Socket::IP>.
+The new object will wrap the same underlying socket filehandle as the
+original, so care should be taken not to continue to use both objects
+concurrently. Ideally the original C<$sock> should be discarded after this
+method is called.
+
+This method checks that the socket domain is C<PF_INET> and will throw an
+exception if it isn't.
+
+=cut
+
+sub as_inet
+{
+   my $self = shift;
+   croak "Cannot downgrade a non-PF_INET socket to IO::Socket::INET" unless $self->sockdomain == AF_INET;
+   return IO::Socket::INET->new_from_fd( $self->fileno, "r+" );
 }
 
 =head1 NON-BLOCKING
@@ -962,6 +984,62 @@ sub split_addr
    }
 
    return ( $addr, undef );
+}
+
+=head2 $addr = IO::Socket::IP->join_addr( $host, $port )
+
+Utility method that performs the reverse of C<split_addr>, returning a string
+formed by joining the specified host address and port number. The host address
+will be wrapped in C<[]> brackets if required (because it is a raw IPv6
+numeric address).
+
+This can be especially useful when combined with the C<sockhost_service> or
+C<peerhost_service> methods.
+
+ say "Connected to ", IO::Socket::IP->join_addr( $sock->peerhost_service );
+
+=cut
+
+sub join_addr
+{
+   shift;
+   my ( $host, $port ) = @_;
+
+   $host = "[$host]" if $host =~ m/:/;
+
+   return join ":", $host, $port if defined $port;
+   return $host;
+}
+
+# Since IO::Socket->new( Domain => ... ) will delete the Domain parameter
+# before calling ->configure, we need to keep track of which it was
+
+package # hide from indexer
+   IO::Socket::IP::_ForINET;
+use base qw( IO::Socket::IP );
+
+sub configure
+{
+   # This is evil
+   my $self = shift;
+   my ( $arg ) = @_;
+
+   bless $self, "IO::Socket::IP";
+   $self->configure( { %$arg, Family => Socket::AF_INET() } );
+}
+
+package # hide from indexer
+   IO::Socket::IP::_ForINET6;
+use base qw( IO::Socket::IP );
+
+sub configure
+{
+   # This is evil
+   my $self = shift;
+   my ( $arg ) = @_;
+
+   bless $self, "IO::Socket::IP";
+   $self->configure( { %$arg, Family => Socket::AF_INET6() } );
 }
 
 =head1 C<IO::Socket::INET> INCOMPATIBILITES

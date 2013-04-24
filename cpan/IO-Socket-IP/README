@@ -256,6 +256,18 @@ METHODS
   $addr = $peer->peeraddr
     Return the peer address as a binary octet string
 
+  $inet = $sock->as_inet
+    Returns a new IO::Socket::INET instance wrapping the same filehandle.
+    This may be useful in cases where it is required, for
+    backward-compatibility, to have a real object of `IO::Socket::INET' type
+    instead of `IO::Socket::IP'. The new object will wrap the same
+    underlying socket filehandle as the original, so care should be taken
+    not to continue to use both objects concurrently. Ideally the original
+    `$sock' should be discarded after this method is called.
+
+    This method checks that the socket domain is `PF_INET' and will throw an
+    exception if it isn't.
+
 NON-BLOCKING
     If the constructor is passed a defined but false value for the
     `Blocking' argument then the socket is put into non-blocking mode. When
@@ -368,6 +380,17 @@ NON-BLOCKING
 
      IO::Socket::IP->split_addr( "something.else" )
                                   # ( "something.else", undef )
+
+  $addr = IO::Socket::IP->join_addr( $host, $port )
+    Utility method that performs the reverse of `split_addr', returning a
+    string formed by joining the specified host address and port number. The
+    host address will be wrapped in `[]' brackets if required (because it is
+    a raw IPv6 numeric address).
+
+    This can be especially useful when combined with the `sockhost_service'
+    or `peerhost_service' methods.
+
+     say "Connected to ", IO::Socket::IP->join_addr( $sock->peerhost_service );
 
 `IO::Socket::INET' INCOMPATIBILITES
     *   The `Timeout' constructor argument is currently not recognised.
