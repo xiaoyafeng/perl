@@ -125,7 +125,7 @@ UNICODE_WARN_SUPER and UNICODE_DISALLOW_SUPER flags, affect the handling of
 code points that are
 above the Unicode maximum of 0x10FFFF.  Code points above 0x7FFF_FFFF (which are
 even less portable) can be warned and/or disallowed even if other above-Unicode
-code points are accepted by the UNICODE_WARN_FE_FF and UNICODE_DISALLOW_FE_FF
+code points are accepted, by the UNICODE_WARN_FE_FF and UNICODE_DISALLOW_FE_FF
 flags.
 
 And finally, the flag UNICODE_WARN_ILLEGAL_INTERCHANGE selects all four of the
@@ -262,11 +262,10 @@ Perl_uvoffuni_to_utf8_flags(pTHX_ U8 *d, UV uv, UV flags)
 #endif
 #endif /* Non loop style */
 }
-
 /*
 =for apidoc uvchr_to_utf8
 
-Adds the UTF-8 representation of the Native code point C<uv> to the end
+Adds the UTF-8 representation of the native code point C<uv> to the end
 of the string C<d>; C<d> should have at least C<UTF8_MAXBYTES+1> free
 bytes available. The return value is the pointer to the byte after the
 end of the new character. In other words,
