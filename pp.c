@@ -3734,7 +3734,7 @@ PP(pp_uc)
 
     if (DO_UTF8(source)) {
 	const U8 *const send = s + len;
-	U8 tmpbuf[UTF8_MAXBYTES+1];
+	U8 tmpbuf[UTF8_MAXBYTES_CASE+1];
 	bool tainted = FALSE;
 
 	/* All occurrences of these are to be moved to follow any other marks.
