@@ -4137,7 +4137,7 @@ PP(pp_fc)
     const U8 *s;
     const U8 *send;
     U8 *d;
-    U8 tmpbuf[UTF8_MAXBYTES * UTF8_MAX_FOLD_CHAR_EXPAND + 1];
+    U8 tmpbuf[UTF8_MAXBYTES_CASE + 1];
     const bool full_folding = TRUE;
     const U8 flags = ( full_folding      ? FOLD_FLAGS_FULL   : 0 )
                    | ( IN_LOCALE_RUNTIME ? FOLD_FLAGS_LOCALE : 0 );
