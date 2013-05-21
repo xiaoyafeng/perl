@@ -1512,13 +1512,20 @@ setlocale(LC_ALL, "C");
         #   position in its list as a marker to indicate that it, unlike the
         #   other code points above ASCII, has a successful case change
         if ($function =~ /^u/) {
-            @list = ("", "a", "\xe0", "\xff", "\x{fb00}", "\x{149}", "\x{101}");
-            $ascii_case_change_delta = -32;
+            @list = ("", "a",
+                     chr(utf8::unicode_to_native(0xe0)),
+                     chr(utf8::unicode_to_native(0xff)),
+                     "\x{fb00}", "\x{149}", "\x{101}");
+            $ascii_case_change_delta = (ord("A") == 193) ? -64 : -32;
             $above_latin1_case_change_delta = -1;
         }
         else {
             @list = ("", "A", "\xC0", "\x{17F}", "\x{100}");
             $ascii_case_change_delta = +32;
+            @list = ("", "A",
+                     chr(utf8::unicode_to_native(0xC0)),
+                     "\x{17F}", "\x{100}");
+            $ascii_case_change_delta = (ord("A") == 193) ? +64 : +32;
             $above_latin1_case_change_delta = +1;
         }
         foreach my $is_utf8_locale (0 .. 1) {
@@ -1531,7 +1538,7 @@ setlocale(LC_ALL, "C");
                     if (! $is_utf8_locale) {
                         $should_be = ($j == $#list)
                             ? chr(ord($char) + $above_latin1_case_change_delta)
-                            : (length $char == 0 || ord($char) > 127)
+                            : (length $char == 0 || utf8::native_to_unicode(ord($char)) > 127)
                             ? $char
                             : chr(ord($char) + $ascii_case_change_delta);
 
